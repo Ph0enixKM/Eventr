@@ -1,0 +1,41 @@
+.eventr-cont {
+    border-radius: 10px;
+}
+
+.eventr-title {
+    padding: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.eventr-date {
+    font-size: 0.75em !important;
+    opacity: 0.7;
+}
+
+.eventr-image {
+    height: 250px;
+    background-size: cover;
+}
+
+.eventr-description {
+    padding: 10px;
+}
+
+.eventr-enroll {
+    border-width: 2px;
+    border-style: solid;
+    display: inline-block;
+    padding: 5px;
+    margin: 20px;
+    cursor: pointer;
+    transform: scale3d(1,1,1);
+    transition: 200ms transform;
+    will-change: transform;
+}
+
+.eventr-enroll:hover {
+    transform: scale(0.95);
+}
