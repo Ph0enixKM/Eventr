@@ -15,13 +15,15 @@ if (!defined('ABSPATH')) {
 }
 
 require_once(plugin_dir_path(__FILE__).'/includes/scripts.php');
-require_once(plugin_dir_path(__FILE__).'/includes/class.php');
+require_once(plugin_dir_path(__FILE__).'/includes/widget.php');
 require_once(plugin_dir_path(__FILE__).'/includes/settings.php');
+require_once(plugin_dir_path(__FILE__).'/includes/mailer.php');
+require_once(plugin_dir_path(__FILE__).'/includes/icons.php');
 
-function register_eventr() {
+new Eventr_Mailer();
+
+add_action('widgets_init', function () {
     register_widget('Eventr_Widget');
-}
-
-add_action('widgets_init', 'register_eventr');
+});
 
 ?>

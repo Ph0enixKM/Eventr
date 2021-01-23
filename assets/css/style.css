@@ -1,7 +1,3 @@
-.eventr-cont {
-    border-radius: 10px;
-}
-
 .eventr-title {
     padding: 10px;
     text-align: center;
@@ -18,24 +14,153 @@
 .eventr-image {
     height: 250px;
     background-size: cover;
+    background-position: center;
 }
 
 .eventr-description {
     padding: 10px;
 }
 
-.eventr-enroll {
-    border-width: 2px;
+.eventr-btn {
+    border-width: 3px !important;
     border-style: solid;
     display: inline-block;
-    padding: 5px;
-    margin: 20px;
+    padding: 8px !important;
+    margin: 20px !important;
     cursor: pointer;
     transform: scale3d(1,1,1);
     transition: 200ms transform;
     will-change: transform;
+    font-weight: 600 !important;
+    font-size: 1em !important;
 }
 
-.eventr-enroll:hover {
+.eventr-btn:hover {
     transform: scale(0.95);
+}
+
+.eventr-cont {
+    perspective: 1000px;
+    position: relative;
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    box-shadow: 0 10px 10px #888;
+    border-radius: 10px;
+}
+
+.eventr-front {
+    transition: 200ms;
+    border-radius: 10px;
+    will-change: transform;
+}
+
+.eventr-back {
+    transition: 200ms;
+    border-radius: 10px;
+    transform: rotateY(-90deg);
+    will-change: transform;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    visibility: hidden;
+}
+
+.eventr-front.flip {
+    transform: rotateY(90deg);
+    visibility: hidden;
+}
+
+.eventr-back.flip {
+    transform: rotateY(0);
+    visibility: visible;
+}
+
+.eventr-back .eventr-input {
+    width: calc(100% - 10px) !important;
+    display: inline-block !important;
+    outline: none !important;
+    border: none;
+    position: relative;
+    padding: 10px !important;
+    margin: 5px !important;
+    background-color: transparent !important;
+    background-color: rgba(0,0,0,0.1) !important;
+    border-radius: 5px;
+}
+
+.eventr-back.done {
+    background-color: #72aa00 !important;
+    color: white !important;
+}
+
+.eventr-submit {
+    background-color: transparent !important;
+    position: absolute !important;
+    bottom: 0px !important;
+    right: 0px !important;
+}
+
+.eventr-exit {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    border-color: #960000;
+    color: #960000;
+}
+
+.eventr-sent {
+    width: 80%;
+    font-size: 20px;
+    font-weight: 600;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.eventr-okay {
+    margin-top: 20px;
+    display: inline-block;
+    will-change: transform;
+    animation: eventr-okay 1s 0.5s forwards;
+    transform: scale(0) rotate(-30deg);
+}
+
+.eventr-done {
+    position: relative;
+    bottom: 20px;
+    animation: eventr-success 0.5s forwards;
+    will-change: transform;
+    transform-origin: top left;
+    margin-top: 20px;
+    animation: eventr-success 1s 0.5s forwards;
+    transform-origin: center;
+    text-align: center;
+    opacity: 0;
+}
+
+@keyframes eventr-success {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes eventr-okay {
+    0% {
+        transform: scale(0) rotate(-30deg);
+    }
+    25% {
+        transform: scale(0.625) rotate(15deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
 }

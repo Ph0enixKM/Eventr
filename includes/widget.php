@@ -23,31 +23,86 @@ class Eventr_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		echo $args['before_widget'];
-		if ( ! empty( $instance['title'] ) ) {
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
-		}
+		
+		$enroll = get_option('eventr_enroll_lang');
+		$name = get_option('eventr_names_lang');
+		$phone = get_option('eventr_phone_lang');
+		$age = get_option('eventr_age_lang');
+		$back = get_option('eventr_back_lang');
+		$mail = get_option('eventr_mail_lang');
+		$target = get_option('eventr_email_target');
+		$submission = get_option('eventr_submission_lang');
+
+		$icons = new EventrIcons();
 
 		?>
 
-		<div class="eventr-cont" style="
-				background-color: <?php echo $instance['fg']; ?>;
-				color: <?php echo $instance['bg']; ?>;
+		<div class="eventr-cont">
+			<div class="eventr-front" style="
+				background-color: <?php echo $instance['bg']; ?>;
+				color: <?php echo $instance['fg']; ?>;
 			">
-			<div class="eventr-front">
 				<div class="eventr-title" style="
-					background-color: <?php echo $instance['bg']; ?>;
-					color: <?php echo $instance['fg']; ?>;
+					background-color: <?php echo $instance['fg']; ?>;
+					color: <?php echo $instance['bg']; ?>;
 				"><?php echo $instance['title'] ?><div class="eventr-date"><?php echo $instance['date'] ?></div></div>
 				<div class="eventr-image" style="
 					background-image: url('<?php echo $instance['image']; ?>');
 				"></div>
 				<div class="eventr-description" ><?php echo $instance['description'] ?></div>
-				<div class="eventr-enroll" style="
-					border-color: <?php echo $instance['bg']; ?>;
-				"><?php echo get_option('eventr_enroll_lang') ?></div>
+				<div class="eventr-enroll eventr-btn" style="
+					border-color: <?php echo $instance['fg']; ?>;
+				"><?php echo $enroll == null ? 'Enroll' : $enroll ?></div>
 			</div>
-			<div class="eventr-back">
-				
+			<div class="eventr-back" style="
+				background-color: <?php echo $instance['bg']; ?>;
+				color: <?php echo $instance['fg']; ?>;
+			">
+				<form>
+					<script>
+						if (!window.eventr) window.eventr = { }
+						window.eventr.text = {
+							email: 'Email',
+							title: '<?php echo $instance['title'] ?>',
+							age: '<?php echo $age == null ? 'Age' : $age ?>',
+							name: '<?php echo $name == null ? 'Name' : $name ?>',
+							phone: '<?php echo $phone == null ? 'Phone' : $phone ?>',
+							mail: '<?php echo $mail == null ? 'New person applied to' : $mail ?>',
+							target: btoa('<?php echo $target == null ? 'BAD' : $target ?>'),
+							submission: '<?php echo $submission == null ? 'Submission sent' : $submission ?>'
+						}
+						window.eventr.icons = {
+							okay: `<?php echo $icons->okay('white'); ?>`.trim()
+						}
+					</script>
+					<!-- Name -->
+					<input class="eventr-input" type="text" name="name" placeholder="<?php echo $name == null ? 'Full Name' : $name ?>" style="
+						border-color: <?php echo $instance['fg']; ?>;
+					"/>
+					<!-- Email -->
+					<input class="eventr-input" type="email" name="email" placeholder="Email" style="
+						border-color: <?php echo $instance['fg']; ?>;
+					"/>
+					<!-- Phone -->
+					<input class="eventr-input" type="tel" name="phone" placeholder="<?php echo $phone == null ? 'Phone' : $phone ?>" style="
+						border-color: <?php echo $instance['fg']; ?>;
+					"/>
+					<!-- Age -->
+					<input class="eventr-input" type="number" name="age" placeholder="<?php echo $age == null ? 'Age' : $age ?>" style="
+						border-color: <?php echo $instance['fg']; ?>;
+					"/>
+					<!-- Enroll -->
+					<div class="eventr-submit eventr-btn" style="
+						border-color: <?php echo $instance['fg']; ?>;
+						color: <?php echo $instance['fg']; ?>;
+					">
+						<?php echo $enroll == null ? 'Enroll' : $enroll ?>
+					</div>
+					<!-- Back -->
+					<div class="eventr-exit eventr-btn">
+						<?php echo $back == null ? 'Back' : $back ?>
+					</div>
+				</form>
 			</div>
 		</div>
 
@@ -70,8 +125,8 @@ class Eventr_Widget extends WP_Widget {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'Eventr', 'eventr_domain' );
 		$description = ! empty( $instance['description'] ) ? $instance['description'] : esc_html__( 'Input description here', 'eventr_domain' );
 		$image = ! empty( $instance['image'] ) ? $instance['image'] : '';
-		$fg = ! empty( $instance['fg'] ) ? $instance['fg'] : '#ffffff';
-		$bg = ! empty( $instance['bg'] ) ? $instance['bg'] : '#000000';
+		$fg = ! empty( $instance['fg'] ) ? $instance['fg'] : '#222222';
+		$bg = ! empty( $instance['bg'] ) ? $instance['bg'] : '#dddddd';
 		$date = ! empty( $instance['date'] ) ? $instance['date'] : '';
 		?>
 
