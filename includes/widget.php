@@ -49,7 +49,7 @@ class Eventr_Widget extends WP_Widget {
 				<div class="eventr-image" style="
 					background-image: url('<?php echo $instance['image']; ?>');
 				"></div>
-				<div class="eventr-description" ><?php echo $instance['description'] ?></div>
+				<div class="eventr-description" ><?php echo nl2br($instance['description']) ?></div>
 				<div class="eventr-enroll eventr-btn" style="
 					border-color: <?php echo $instance['fg']; ?>;
 				"><?php echo $enroll == null ? 'Enroll' : $enroll ?></div>
@@ -302,7 +302,7 @@ class Eventr_Widget extends WP_Widget {
 	public function update( $new_instance, $old_instance ) {
 		$instance = array();
 		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
-		$instance['description'] = ( ! empty( $new_instance['description'] ) ) ? sanitize_text_field( $new_instance['description'] ) : '';
+		$instance['description'] = ( ! empty( $new_instance['description'] ) ) ? $new_instance['description'] : '';
 		$instance['image'] = ( ! empty( $new_instance['image'] ) ) ? sanitize_text_field( $new_instance['image'] ) : '';
 		$instance['fg'] = ( ! empty( $new_instance['fg'] ) ) ? sanitize_text_field( $new_instance['fg'] ) : '';
 		$instance['bg'] = ( ! empty( $new_instance['bg'] ) ) ? sanitize_text_field( $new_instance['bg'] ) : '';
