@@ -58,6 +58,9 @@ class Eventr_Widget extends WP_Widget {
 				background-color: <?php echo $instance['bg']; ?>;
 				color: <?php echo $instance['fg']; ?>;
 			">
+				<div class="eventr-title" style="
+					color: <?php echo $instance['fg']; ?>;
+				"><?php echo $instance['title'] ?></div>
 				<form>
 					<script>
 						if (!window.eventr) window.eventr = { }
@@ -75,9 +78,9 @@ class Eventr_Widget extends WP_Widget {
 						}
 					</script>
 					<!-- Title -->
-					<input class="eventr-input" type="hidden" name="title" value="<?php echo $instance['title'] ?>"/>
+					<input class="eventr-input" type="hidden" name="title" value="<?php echo esc_attr($instance['title']) ?>"/>
 					<!-- Name -->
-					<input class="eventr-input" type="text" name="name" placeholder="<?php echo $name == null ? 'Full Name' : $name ?>" style="
+					<input class="eventr-input" type="text" name="name" placeholder="<?php echo $name == null ? 'Full Name' : esc_attr($name) ?>" style="
 						border-color: <?php echo $instance['fg']; ?>;
 					"/>
 					<!-- Email -->
@@ -85,11 +88,11 @@ class Eventr_Widget extends WP_Widget {
 						border-color: <?php echo $instance['fg']; ?>;
 					"/>
 					<!-- Phone -->
-					<input class="eventr-input" type="tel" name="phone" placeholder="<?php echo $phone == null ? 'Phone' : $phone ?>" style="
+					<input class="eventr-input" type="tel" name="phone" placeholder="<?php echo $phone == null ? 'Phone' : esc_attr($phone) ?>" style="
 						border-color: <?php echo $instance['fg']; ?>;
 					"/>
 					<!-- Age -->
-					<input class="eventr-input" type="number" name="age" placeholder="<?php echo $age == null ? 'Age' : $age ?>" style="
+					<input class="eventr-input" type="number" name="age" placeholder="<?php echo $age == null ? 'Age' : esc_attr($age) ?>" style="
 						border-color: <?php echo $instance['fg']; ?>;
 					"/>
 					<!-- Enroll -->

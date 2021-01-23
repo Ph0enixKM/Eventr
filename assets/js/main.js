@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     for (const item of submits) {
-        item.addEventListener('click', async () => {
+        item.addEventListener('click', async function _ () {
             const parent = item.parentNode
             const cont = parent.parentNode
             const data = new FormData();
@@ -32,6 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (el.classList.contains('eventr-input')) {
                     const name = el.getAttribute('name')
                     data.append(name, el.value)
+                    if (!el.value.trim().length) {
+                        for (const item of parent.children)
+                            item.classList.remove('bad')
+                        el.classList.add('bad')
+                        return
+                    }
                 }
             }
             for (const [key, value] of Object.entries(window.eventr.text)) {
@@ -39,6 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             console.info('Eventr: sending...\n', console.log(Object.fromEntries(data)))
             try {
+                item.style.opacity = '0.5'
+                item.removeEventListener('click', _)
+                item.nextElementSibling.remove()
                 let res = await fetch('/?rest_route=/eventr/mail', {
                     body: data,
                     method: 'POST'

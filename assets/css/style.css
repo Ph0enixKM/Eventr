@@ -94,6 +94,16 @@
     border-radius: 5px;
 }
 
+.eventr-back .eventr-input.bad {
+    border: 5px#960000 solid;
+    background-color: #ff4949 !important;
+    color: white;
+}
+
+.eventr-back .eventr-input.bad::placeholder {
+    color: #960000;
+}
+
 .eventr-back.done {
     background-color: #72aa00 !important;
     color: white !important;
