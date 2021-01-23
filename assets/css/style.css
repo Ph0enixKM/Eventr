@@ -43,14 +43,15 @@
     perspective: 1000px;
     position: relative;
     font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    box-shadow: 0 10px 10px #888;
     border-radius: 10px;
+    padding-bottom: 10px;
 }
 
 .eventr-front {
     transition: 200ms;
     border-radius: 10px;
     will-change: transform;
+    box-shadow: 0 10px 10px #888;
 }
 
 .eventr-back {
@@ -65,16 +66,19 @@
     height: 100%;
     padding: 20px;
     visibility: hidden;
+    box-shadow: 0 0 0 #888;
 }
 
 .eventr-front.flip {
     transform: rotateY(90deg);
     visibility: hidden;
+    box-shadow: 0 0 0 #888;
 }
 
 .eventr-back.flip {
     transform: rotateY(0);
     visibility: visible;
+    box-shadow: 0 10px 10px #888;
 }
 
 .eventr-back .eventr-input {

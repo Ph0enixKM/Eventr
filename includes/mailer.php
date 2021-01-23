@@ -13,7 +13,7 @@ class Eventr_Mailer {
 
     public function send(WP_REST_Request $data) {
         // Properties
-        $pTitle = $_POST["t-title"];
+        $pTitle = $_POST["title"];
         $pName = $_POST["name"];
         $pEmail = $_POST["email"];
         $pPhone = $_POST["phone"];
@@ -38,10 +38,7 @@ class Eventr_Mailer {
                 "$tAge: $pAge";
             // Send mail to the target
             $done = wp_mail($target, $subject, $message);
-            // Render result
-            // TMP:
-            return 'OK';
-
+            // Send result
             if ($done) return 'OK';
             return 'Mailer is unable to send email';
         }

@@ -63,7 +63,6 @@ class Eventr_Widget extends WP_Widget {
 						if (!window.eventr) window.eventr = { }
 						window.eventr.text = {
 							email: 'Email',
-							title: '<?php echo $instance['title'] ?>',
 							age: '<?php echo $age == null ? 'Age' : $age ?>',
 							name: '<?php echo $name == null ? 'Name' : $name ?>',
 							phone: '<?php echo $phone == null ? 'Phone' : $phone ?>',
@@ -75,6 +74,8 @@ class Eventr_Widget extends WP_Widget {
 							okay: `<?php echo $icons->okay('white'); ?>`.trim()
 						}
 					</script>
+					<!-- Title -->
+					<input class="eventr-input" type="hidden" name="title" value="<?php echo $instance['title'] ?>"/>
 					<!-- Name -->
 					<input class="eventr-input" type="text" name="name" placeholder="<?php echo $name == null ? 'Full Name' : $name ?>" style="
 						border-color: <?php echo $instance['fg']; ?>;
