@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validate(el, parent) {
+        if (el.classList.contains('eventr-select')) return true
         if (el.classList.contains('eventr-checkbox')) {
             if (!el.checked) {
                 for (const item of parent.children)

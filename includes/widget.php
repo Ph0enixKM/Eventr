@@ -87,6 +87,23 @@ class Eventr_Widget extends WP_Widget {
 									<br/>
 								<?php
 							}
+							else if ($obj['type'] === 'select') {
+								?>
+									<label style="vertical-align: middle">
+										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+									</label>
+									<select
+										class="eventr-input eventr-select <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
+										name="<?php echo esc_attr($title) ?>"
+									>
+										<?php
+											foreach ($obj['options'] as $item) {
+												echo "<option value='$item'>$item</option>";
+											}
+										?>
+									</select>
+								<?php
+							}
 							else {
 								?>
 									<input
@@ -314,16 +331,31 @@ class Eventr_Widget extends WP_Widget {
 						<option value="text" selected>Text</option>
 						<option value="number">Number</option>
 						<option value="checkbox">Checkbox</option>
+						<option value="select">Select</option>
 					</select>
 					<label>Required: </label>
 					<input type="checkbox"/>
-					<input type="button" value="Add" style="width:40px;color:green"/>	
+					<input type="button" value="Add" style="width:40px;color:green"/>
+					<div></div>
 				</div>
 			</div>
 			<script>
 				function eventrFormUpdate(wpTarget, json) {
 					wpTarget.val(JSON.stringify(json))
 					wpTarget.trigger('change')
+				}
+				function eventrProduceList(list) {
+					if (list && list.length) {
+						return `
+						<span style="color:gray">
+							[
+								<span style="color:black">
+									${list.join('</span>, <span style="color:black">')}
+								</span>
+							]
+						</span>`
+					}
+					return ''
 				}
 				function eventrFormRender($, json, cont, wpTarget) {
 					$(cont).empty()
@@ -336,11 +368,12 @@ class Eventr_Widget extends WP_Widget {
 									<span style="color:gray;flex:1;text-align:center">
 										(${value.type})
 										${value.req ? '<span style="color:red">*</span>' : ''}
+										${eventrProduceList(value.options)}
 									</span>
 								</div>
 							`)
 							const remove = $(`
-								<input type="button" value="Delete" style="width:50px;color:red"/>
+								<input type="button" value="Delete" style="width:60px;color:red"/>
 							`)
 							remove.click(() => {
 								delete json[key]
@@ -365,17 +398,38 @@ class Eventr_Widget extends WP_Widget {
 					const type = addCont.children[1]
 					const check = addCont.children[3]
 					const add = addCont.children[4]
+					const list = addCont.children[5]
 					eventrFormRender($, json, cont, wpTarget)
+					let options = []
+					$(type).change(() => {
+						setTimeout(() => {
+							if (type.value == 'select'){
+								while (true) {
+									let val = prompt('Add option:')
+									options.push(val)
+									if (!confirm('Do you want to add another one?')) break;
+								}
+								list.innerHTML = eventrProduceList(options)
+							}
+							else {
+								options = []
+								list.innerHTML = ''
+							}
+						}, 100);
+					})
 					$(add).click(() => {
 						if (!title.value.trim().length)
 							return alert('Title is missing')
 						json[title.value] = {
 							type: type.value,
-							req: check.checked
+							req: check.checked,
+							options
 						}
 						eventrFormRender($, json, cont, wpTarget)
 						eventrFormUpdate(wpTarget, json)
 						title.value = ''
+						options = []
+						list.innerHTML = ''
 					})
 				})
 			</script>
