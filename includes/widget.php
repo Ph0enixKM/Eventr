@@ -117,11 +117,14 @@ class Eventr_Widget extends WP_Widget {
 							}
 							else {
 								?>
+									<label style="vertical-align: middle">
+										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+									</label>
 									<input
 										class="eventr-input <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
 										type="<?php echo esc_attr($obj['type']) ?>"
 										name="<?php echo esc_attr($title) ?>"
-										placeholder="<?php echo esc_attr($title).($obj['req'] ? '*' : '') ?>"
+										placeholder="<?php echo ((strlen($title) > 35) ? esc_attr(substr($title,0,33)).'...' : esc_attr($title)); ?>"
 									/>
 								<?php
 							}
