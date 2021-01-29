@@ -12,37 +12,37 @@ class Eventr_Mailer {
     }
 
     public function send(WP_REST_Request $data) {
-        // Properties
-        $pTitle = $_POST["title"];
-        $pName = $_POST["name"];
-        $pEmail = $_POST["email"];
-        $pPhone = $_POST["phone"];
-        $pAge = $_POST["age"];
-        // Translations
-        $tName = $_POST["t-name"];
-        $tEmail = $_POST["t-email"];
-        $tPhone = $_POST["t-phone"];
-        $tAge = $_POST["t-age"];
-        $tMail = $_POST["t-mail"];
-        $tSubmission = $_POST["t-submission"];
-        $tTarget = $_POST["t-target"];
-        // Check whether target 
-        // has been adressed
-        if ($tTarget != 'BAD') {
-            $target = base64_decode($tTarget);
-            $subject = "$tMail: $pTitle!";
-            $message = "$subject\n".
-                "$tName: $pName\n".
-                "$tEmail: $pEmail\n".
-                "$tPhone: $pPhone\n".
-                "$tAge: $pAge";
-            // Send mail to the target
-            $done = wp_mail($target, $subject, $message);
-            // Send result
-            if ($done) return 'OK';
-            return 'Mailer is unable to send email';
+        $html = '';
+        // Get the target
+        $target = $_POST['_target'];
+        if ($target == 'BAD') return 'Target is missing';
+        $target = base64_decode($target);
+        // Create subject
+        $_mail = $_POST['_mail'];
+        $_title = $_POST['_title'];
+        $subject = "$_mail: $_title!";
+        // Add body
+        $html .= "<span style='font-size: 1.5em'>$subject</span>";
+        $html .= "<ul>";
+        foreach ($_POST as $key => $value) {
+            if ($key[0] != '_') {
+                $name = str_replace('_', ' ', $key);
+                if (strlen(trim($value)) == 0) {
+                    $html .= "<li> $name: <span style='color: gray'>(empty)</span></li>";
+                }
+                else {
+                    $html .= "<li> $name: <span style='font-weight:600;font-size:1.2em'>$value</span></li>";
+                }
+            }
         }
-        return 'Target is missing';
+        $html .= "</ul>";
+        // Send result
+        add_filter('wp_mail_content_type', function() {
+            return 'text/html';
+        });
+        $done = wp_mail($target, $subject, $html);
+        if ($done) return 'OK';
+        return 'Mailer is unable to send email';
     }
 }
 

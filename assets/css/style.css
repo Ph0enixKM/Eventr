@@ -94,6 +94,11 @@
     border-radius: 5px;
 }
 
+.eventr-back .eventr-input.eventr-checkbox {
+    width: auto !important;
+    vertical-align: middle;
+}
+
 .eventr-back .eventr-input.bad {
     border: 5px#960000 solid;
     background-color: #ff4949 !important;

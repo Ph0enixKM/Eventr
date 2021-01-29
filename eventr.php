@@ -4,7 +4,7 @@
 Plugin Name: Eventr
 Plugin URI: https://github.com/Ph0enixKM/Eventr
 Description: Create events easily
-Version: 0.2.0
+Version: 0.3.0
 Author: Paweł Karaś
 Author URI: https://github.com/Ph0enixKM
 */

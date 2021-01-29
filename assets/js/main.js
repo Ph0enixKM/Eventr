@@ -23,6 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
 
+    function validate(el, parent) {
+        if (el.classList.contains('eventr-checkbox')) {
+            if (!el.checked) {
+                for (const item of parent.children)
+                    item.classList.remove('bad')
+                el.classList.add('bad')
+                return false
+            }
+        }
+        else {
+            if (!el.value.trim().length) {
+                for (const item of parent.children)
+                    item.classList.remove('bad')
+                el.classList.add('bad')
+                return false
+            }
+        }
+        return true
+    }
+
     for (const item of submits) {
         item.addEventListener('click', async function _ () {
             const parent = item.parentNode
@@ -31,17 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const el of parent.children) {
                 if (el.classList.contains('eventr-input')) {
                     const name = el.getAttribute('name')
-                    data.append(name, el.value)
-                    if (!el.value.trim().length) {
-                        for (const item of parent.children)
-                            item.classList.remove('bad')
-                        el.classList.add('bad')
-                        return
+                    // Checkbox case
+                    if (el.classList.contains('eventr-checkbox')){
+                        data.append(name, (el.checked) ? '✔' : '❌')
                     }
+                    // Input case
+                    else {
+                        data.append(name, el.value)
+                    }
+                    if (el.classList.contains('eventr-req'))
+                        if (!validate(el, parent)) return
                 }
             }
             for (const [key, value] of Object.entries(window.eventr.text)) {
-                data.append(`t-${key}`, value)
+                data.append(`_${key}`, value)
             }
             console.info('Eventr: sending...\n', console.log(Object.fromEntries(data)))
             try {

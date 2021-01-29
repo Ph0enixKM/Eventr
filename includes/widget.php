@@ -25,9 +25,6 @@ class Eventr_Widget extends WP_Widget {
 		echo $args['before_widget'];
 		
 		$enroll = get_option('eventr_enroll_lang');
-		$name = get_option('eventr_names_lang');
-		$phone = get_option('eventr_phone_lang');
-		$age = get_option('eventr_age_lang');
 		$back = get_option('eventr_back_lang');
 		$mail = get_option('eventr_mail_lang');
 		$target = get_option('eventr_email_target');
@@ -65,10 +62,6 @@ class Eventr_Widget extends WP_Widget {
 					<script>
 						if (!window.eventr) window.eventr = { }
 						window.eventr.text = {
-							email: 'Email',
-							age: '<?php echo $age == null ? 'Age' : $age ?>',
-							name: '<?php echo $name == null ? 'Name' : $name ?>',
-							phone: '<?php echo $phone == null ? 'Phone' : $phone ?>',
 							mail: '<?php echo $mail == null ? 'New person applied to' : $mail ?>',
 							target: btoa('<?php echo $target == null ? 'BAD' : $target ?>'),
 							submission: '<?php echo $submission == null ? 'Submission sent' : $submission ?>'
@@ -77,24 +70,36 @@ class Eventr_Widget extends WP_Widget {
 							okay: `<?php echo $icons->okay('white'); ?>`.trim()
 						}
 					</script>
-					<!-- Title -->
-					<input class="eventr-input" type="hidden" name="title" value="<?php echo esc_attr($instance['title']) ?>"/>
-					<!-- Name -->
-					<input class="eventr-input" type="text" name="name" placeholder="<?php echo $name == null ? 'Full Name' : esc_attr($name) ?>" style="
-						border-color: <?php echo $instance['fg']; ?>;
-					"/>
-					<!-- Email -->
-					<input class="eventr-input" type="email" name="email" placeholder="Email" style="
-						border-color: <?php echo $instance['fg']; ?>;
-					"/>
-					<!-- Phone -->
-					<input class="eventr-input" type="tel" name="phone" placeholder="<?php echo $phone == null ? 'Phone' : esc_attr($phone) ?>" style="
-						border-color: <?php echo $instance['fg']; ?>;
-					"/>
-					<!-- Age -->
-					<input class="eventr-input" type="number" name="age" placeholder="<?php echo $age == null ? 'Age' : esc_attr($age) ?>" style="
-						border-color: <?php echo $instance['fg']; ?>;
-					"/>
+					<input class="eventr-input" type="hidden" name="_title" value="<?php echo esc_attr($instance['title']) ?>"/>
+
+					<?php
+						foreach (json_decode($instance['form'], true) as $title => $obj) {
+							if ($obj['type'] === 'checkbox') {
+								?>
+									<label style="vertical-align: middle">
+										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+									</label>
+									<input
+										class="eventr-input eventr-checkbox <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
+										type="<?php echo esc_attr($obj['type']) ?>"
+										name="<?php echo esc_attr($title) ?>"
+									/>
+									<br/>
+								<?php
+							}
+							else {
+								?>
+									<input
+										class="eventr-input <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
+										type="<?php echo esc_attr($obj['type']) ?>"
+										name="<?php echo esc_attr($title) ?>"
+										placeholder="<?php echo esc_attr($title).($obj['req'] ? '*' : '') ?>"
+									/>
+								<?php
+							}
+						}
+					?>
+					
 					<!-- Enroll -->
 					<div class="eventr-submit eventr-btn" style="
 						border-color: <?php echo $instance['fg']; ?>;
@@ -111,10 +116,6 @@ class Eventr_Widget extends WP_Widget {
 		</div>
 
 		<?php
-		// echo 'title: '.$instance['title'].'<br>description: '.$instance['description'];
-
-
-
 		echo $args['after_widget'];
 	}
 
@@ -132,6 +133,8 @@ class Eventr_Widget extends WP_Widget {
 		$fg = ! empty( $instance['fg'] ) ? $instance['fg'] : '#222222';
 		$bg = ! empty( $instance['bg'] ) ? $instance['bg'] : '#dddddd';
 		$date = ! empty( $instance['date'] ) ? $instance['date'] : '';
+		$form = ! empty( $instance['form'] ) ? $instance['form'] : '{}';
+
 		?>
 
 		
@@ -289,6 +292,94 @@ class Eventr_Widget extends WP_Widget {
 				placeholder="Description"
             ><?php echo $description; ?></textarea>
 		</p>
+
+		<!-- Form -->
+		<p>
+            <label for="<?php echo esc_attr( $this->get_field_id( 'form' ) ); ?>">
+                <?php esc_attr_e( 'Form:', 'eventr_domain' ); ?>
+            </label>
+            <input
+				type="hidden"
+				id="<?php echo esc_attr( $this->get_field_id( 'form' ) ); ?>"
+                name="<?php echo esc_attr( $this->get_field_name( 'form' ) ); ?>"
+				value="<?php echo esc_attr( $form ); ?>"
+			/>
+			<div class="<?php echo esc_attr($this->get_field_id( 'form' )); ?>">
+				<div class="cont">
+
+				</div>
+				<div>
+					<input type="text" placeholder="Enter title" style="width:150px"/>
+					<select style="width:80px">
+						<option value="text" selected>Text</option>
+						<option value="number">Number</option>
+						<option value="checkbox">Checkbox</option>
+					</select>
+					<label>Required: </label>
+					<input type="checkbox"/>
+					<input type="button" value="Add" style="width:40px;color:green"/>	
+				</div>
+			</div>
+			<script>
+				function eventrFormUpdate(wpTarget, json) {
+					wpTarget.val(JSON.stringify(json))
+					wpTarget.trigger('change')
+				}
+				function eventrFormRender($, json, cont, wpTarget) {
+					$(cont).empty()
+					if (json) {
+						for (const [key, value] of Object.entries(json)) {
+							if (key == null || value == null) continue
+							const template = $(`
+								<div style="display: flex;border-bottom: 1px solid gray">
+									${key}
+									<span style="color:gray;flex:1;text-align:center">
+										(${value.type})
+										${value.req ? '<span style="color:red">*</span>' : ''}
+									</span>
+								</div>
+							`)
+							const remove = $(`
+								<input type="button" value="Delete" style="width:50px;color:red"/>
+							`)
+							remove.click(() => {
+								delete json[key]
+								template.remove()
+								eventrFormUpdate(wpTarget, json)
+							})
+							$(template).append(remove)
+							$(cont).append(template)
+						}
+					}
+				}
+
+				jQuery(document).ready(function ($) {
+					const selector = '<?php echo esc_attr($this->get_field_id( 'form' )); ?>'
+					const wpTarget = $(`#${selector}`)
+					const json = JSON.parse($(`#${selector}`)[0].value)
+					const parent = $(`.${selector}`)[0]
+					const cont = parent.children[0]
+					// Adding fields
+					const addCont = parent.children[1]
+					const title = addCont.children[0]
+					const type = addCont.children[1]
+					const check = addCont.children[3]
+					const add = addCont.children[4]
+					eventrFormRender($, json, cont, wpTarget)
+					$(add).click(() => {
+						if (!title.value.trim().length)
+							return alert('Title is missing')
+						json[title.value] = {
+							type: type.value,
+							req: check.checked
+						}
+						eventrFormRender($, json, cont, wpTarget)
+						eventrFormUpdate(wpTarget, json)
+						title.value = ''
+					})
+				})
+			</script>
+		</p>
 		<?php 
 	}
 
@@ -310,6 +401,7 @@ class Eventr_Widget extends WP_Widget {
 		$instance['fg'] = ( ! empty( $new_instance['fg'] ) ) ? sanitize_text_field( $new_instance['fg'] ) : '';
 		$instance['bg'] = ( ! empty( $new_instance['bg'] ) ) ? sanitize_text_field( $new_instance['bg'] ) : '';
 		$instance['date'] = ( ! empty( $new_instance['date'] ) ) ? sanitize_text_field( $new_instance['date'] ) : '';
+		$instance['form'] = ( ! empty( $new_instance['form'] ) ) ? sanitize_text_field( $new_instance['form'] ) : '';
 
 		return $instance;
 	}
