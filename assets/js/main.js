@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
     for (const item of exits) {
-        const front = item.parentNode.parentNode
+        const front = item.parentNode
         const back = front.previousElementSibling
         item.addEventListener('click', () => {
             front.classList.remove('flip')
@@ -46,10 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (const item of submits) {
         item.addEventListener('click', async function _ () {
-            const parent = item.parentNode
-            const cont = parent.parentNode
+            const form = item.previousElementSibling
             const data = new FormData();
-            for (const el of parent.children) {
+            for (const el of form.children) {
                 if (el.classList.contains('eventr-input')) {
                     const name = el.getAttribute('name')
                     // Checkbox case
@@ -61,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         data.append(name, el.value)
                     }
                     if (el.classList.contains('eventr-req'))
-                        if (!validate(el, parent)) return
+                        if (!validate(el, form)) return
                 }
             }
             for (const [key, value] of Object.entries(window.eventr.text)) {
@@ -78,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 let val = await res.json();
                 if (val == 'OK') {
-                    cont.classList.add('done')
-                    cont.innerHTML = `
+                    form.parentElement.classList.add('done')
+                    form.parentElement.innerHTML = `
                         <div class="eventr-sent">
                             <div class="eventr-okay">${eventr.icons.okay}</div>
                         </div>
@@ -87,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     `
                 }
                 else {
-                    cont.innerHTML = `
+                    form.parentElement.innerHTML = `
                         <div class="eventr-sent">
                             <div>ERROR</div>
                             <div style="font-size: 15px">${val}</div>

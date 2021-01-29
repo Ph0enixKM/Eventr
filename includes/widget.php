@@ -104,6 +104,17 @@ class Eventr_Widget extends WP_Widget {
 									</select>
 								<?php
 							}
+							else if ($obj['type'] === 'paragraph') {
+								?>
+									<label style="vertical-align: middle">
+										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+									</label>
+									<textarea
+										class="eventr-input <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
+										name="<?php echo esc_attr($title) ?>"
+									></textarea>
+								<?php
+							}
 							else {
 								?>
 									<input
@@ -117,18 +128,18 @@ class Eventr_Widget extends WP_Widget {
 						}
 					?>
 					
-					<!-- Enroll -->
-					<div class="eventr-submit eventr-btn" style="
-						border-color: <?php echo $instance['fg']; ?>;
-						color: <?php echo $instance['fg']; ?>;
-					">
-						<?php echo $enroll == null ? 'Enroll' : $enroll ?>
-					</div>
-					<!-- Back -->
-					<div class="eventr-exit eventr-btn">
-						<?php echo $back == null ? 'Back' : $back ?>
-					</div>
 				</form>
+				<!-- Enroll -->
+				<div class="eventr-submit eventr-btn" style="
+					border-color: <?php echo $instance['fg']; ?>;
+					color: <?php echo $instance['fg']; ?>;
+				">
+					<?php echo $enroll == null ? 'Enroll' : $enroll ?>
+				</div>
+				<!-- Back -->
+				<div class="eventr-exit eventr-btn">
+					<?php echo $back == null ? 'Back' : $back ?>
+				</div>
 			</div>
 		</div>
 
@@ -332,6 +343,7 @@ class Eventr_Widget extends WP_Widget {
 						<option value="number">Number</option>
 						<option value="checkbox">Checkbox</option>
 						<option value="select">Select</option>
+						<option value="paragraph">Paragraph</option>
 					</select>
 					<label>Required: </label>
 					<input type="checkbox"/>
@@ -403,7 +415,7 @@ class Eventr_Widget extends WP_Widget {
 					let options = []
 					$(type).change(() => {
 						setTimeout(() => {
-							if (type.value == 'select'){
+							if (type.value == 'select') {
 								while (true) {
 									let val = prompt('Add option:')
 									options.push(val)

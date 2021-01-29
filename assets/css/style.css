@@ -109,6 +109,11 @@
     color: #960000;
 }
 
+.eventr-back form {
+    height: calc(100% - 140px);
+    overflow-y: auto;
+}
+
 .eventr-back.done {
     background-color: #72aa00 !important;
     color: white !important;
