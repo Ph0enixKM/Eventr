@@ -422,7 +422,7 @@ class Eventr_Widget extends WP_Widget {
 								while (true) {
 									let val = prompt('Add option:')
 									for (const item of val.split(',')) {
-										options.push(val.trim())
+										options.push(item.trim())
 									}
 									if (!confirm('Do you want to add another one?')) break;
 								}
