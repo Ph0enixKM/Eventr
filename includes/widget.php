@@ -23,7 +23,7 @@ class Eventr_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		echo $args['before_widget'];
-		
+
 		$enroll = get_option('eventr_enroll_lang');
 		$back = get_option('eventr_back_lang');
 		$mail = get_option('eventr_mail_lang');
@@ -130,7 +130,7 @@ class Eventr_Widget extends WP_Widget {
 							}
 						}
 					?>
-					
+
 				</form>
 				<!-- Enroll -->
 				<div class="eventr-submit eventr-btn" style="
@@ -168,17 +168,17 @@ class Eventr_Widget extends WP_Widget {
 
 		?>
 
-		
+
 		<!-- Title -->
 		<p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>">
                 <?php esc_attr_e( 'Title:', 'eventr_domain' ); ?>
             </label>
-            <input 
-                class="widefat" 
-                id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" 
-                name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" 
-                type="text" 
+            <input
+                class="widefat"
+                id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"
+                name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>"
+                type="text"
 				placeholder="Title"
                 value="<?php echo esc_attr( $title ); ?>"
             />
@@ -187,20 +187,20 @@ class Eventr_Widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'image' ) ); ?>">
                 <?php esc_attr_e( 'Image:', 'eventr_domain' ); ?>
             </label>
-			<div 
-				class="<?php echo esc_attr($this->get_field_id( 'image' )); ?>" 
+			<div
+				class="<?php echo esc_attr($this->get_field_id( 'image' )); ?>"
 				style="background-image: url('<?php echo esc_attr( $image ); ?>')"
 				value="<?php echo esc_attr( $image ); ?>"
 			>
 			<input
-				type="hidden" 
-				id="<?php echo esc_attr( $this->get_field_id( 'image' ) ); ?>" 
-				name="<?php echo esc_attr( $this->get_field_name( 'image' ) ); ?>"  
+				type="hidden"
+				id="<?php echo esc_attr( $this->get_field_id( 'image' ) ); ?>"
+				name="<?php echo esc_attr( $this->get_field_name( 'image' ) ); ?>"
 				value="<?php echo esc_attr( $image ); ?>"
 			/>
 				<?php
-					echo trim($instance['image']) == '' 
-						? '<span id="eventr-center">Select image</span>' 
+					echo trim($instance['image']) == ''
+						? '<span id="eventr-center">Select image</span>'
 						: '<span id="eventr-bin">Delete</span>'
 				?>
 			</div>
@@ -235,7 +235,7 @@ class Eventr_Widget extends WP_Widget {
 					border-radius: 10px;
 				}
 			</style>
-			
+
 			<script>
 				jQuery(document).ready(function ($) {
 					const selector = '<?php echo esc_attr($this->get_field_id( 'image' )); ?>';
@@ -250,7 +250,7 @@ class Eventr_Widget extends WP_Widget {
 									$(`.${selector}`).css('background-image', `url('${attachment.url}')`)
 									$(`#${selector}`).trigger('change')
 									$(`.${selector} #eventr-center`).remove();
-								
+
 							} else {
 								return orig_send_attachment.apply($('#' + button_id), [props, attachment]);
 							}
@@ -316,8 +316,8 @@ class Eventr_Widget extends WP_Widget {
             <label for="<?php echo esc_attr( $this->get_field_id( 'description' ) ); ?>">
                 <?php esc_attr_e( 'Description:', 'eventr_domain' ); ?>
             </label>
-            <textarea 
-                class="widefat" 
+            <textarea
+                class="widefat"
                 id="<?php echo esc_attr( $this->get_field_id( 'description' ) ); ?>"
                 name="<?php echo esc_attr( $this->get_field_name( 'description' ) ); ?>"
 				placeholder="Description"
@@ -421,7 +421,9 @@ class Eventr_Widget extends WP_Widget {
 							if (type.value == 'select') {
 								while (true) {
 									let val = prompt('Add option:')
-									options.push(val)
+									for (const item of val.split(',')) {
+										options.push(val.trim())
+									}
 									if (!confirm('Do you want to add another one?')) break;
 								}
 								list.innerHTML = eventrProduceList(options)
@@ -449,7 +451,7 @@ class Eventr_Widget extends WP_Widget {
 				})
 			</script>
 		</p>
-		<?php 
+		<?php
 	}
 
 	/**
