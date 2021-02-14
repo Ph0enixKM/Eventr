@@ -73,58 +73,61 @@ class Eventr_Widget extends WP_Widget {
 					<input class="eventr-input" type="hidden" name="_title" value="<?php echo esc_attr($instance['title']) ?>"/>
 
 					<?php
-						foreach (json_decode($instance['form'], true) as $title => $obj) {
-							if ($obj['type'] === 'checkbox') {
+						foreach (json_decode($instance['form'], true) as $item) {
+							if ($item['type'] === 'checkbox') {
 								?>
 									<label style="vertical-align: middle">
-										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+										<?php echo $item['title'].($item['req'] ? '<span style="color:red">*</span>' : ''); ?>
 									</label>
 									<input
-										class="eventr-input eventr-checkbox <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
-										type="<?php echo esc_attr($obj['type']) ?>"
-										name="<?php echo esc_attr($title) ?>"
+										class="eventr-input eventr-checkbox <?php echo $item['req'] ? 'eventr-req' : '' ?>"
+										type="<?php echo esc_attr($item['type']) ?>"
+										name="<?php echo esc_attr($item['title']) ?>"
 									/>
 									<br/>
 								<?php
 							}
-							else if ($obj['type'] === 'select') {
+							else if ($item['type'] === 'select') {
 								?>
 									<label style="vertical-align: middle">
-										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+										<?php echo $item['title'].($item['req'] ? '<span style="color:red">*</span>' : ''); ?>
 									</label>
 									<select
-										class="eventr-input eventr-select <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
-										name="<?php echo esc_attr($title) ?>"
+										class="eventr-input eventr-select <?php echo $item['req'] ? 'eventr-req' : '' ?>"
+										name="<?php echo esc_attr($item['title']) ?>"
 									>
 										<?php
-											foreach ($obj['options'] as $item) {
-												echo "<option value='$item'>$item</option>";
+											foreach ($item['options'] as $op) {
+												echo "<option value='$op'>$op</option>";
 											}
 										?>
 									</select>
 								<?php
 							}
-							else if ($obj['type'] === 'paragraph') {
+							else if ($item['type'] === 'paragraph') {
 								?>
 									<label style="vertical-align: middle">
-										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+										<?php echo $item['title'].($item['req'] ? '<span style="color:red">*</span>' : ''); ?>
 									</label>
 									<textarea
-										class="eventr-input <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
-										name="<?php echo esc_attr($title) ?>"
+										class="eventr-input <?php echo $item['req'] ? 'eventr-req' : '' ?>"
+										name="<?php echo esc_attr($item['title']) ?>"
 									></textarea>
 								<?php
 							}
 							else {
 								?>
 									<label style="vertical-align: middle">
-										<?php echo $title.($obj['req'] ? '<span style="color:red">*</span>' : ''); ?>
+										<?php echo $item['title'].($item['req'] ? '<span style="color:red">*</span>' : ''); ?>
 									</label>
 									<input
-										class="eventr-input <?php echo $obj['req'] ? 'eventr-req' : '' ?>"
-										type="<?php echo esc_attr($obj['type']) ?>"
-										name="<?php echo esc_attr($title) ?>"
-										placeholder="<?php echo ((strlen($title) > 35) ? esc_attr(substr($title,0,33)).'...' : esc_attr($title)); ?>"
+										class="eventr-input <?php echo $item['req'] ? 'eventr-req' : '' ?>"
+										type="<?php echo esc_attr($item['type']) ?>"
+										name="<?php echo esc_attr($item['title']) ?>"
+										placeholder="<?php echo ((strlen($item['title']) > 35) 
+											? esc_attr(substr($item['title'],0,33)).'...' 
+											: esc_attr($item['title'])); 
+										?>"
 									/>
 								<?php
 							}
@@ -372,29 +375,116 @@ class Eventr_Widget extends WP_Widget {
 					}
 					return ''
 				}
+				function eventrListify(json, wpTarget) {
+					if (!Array.isArray(json)) {
+						console.log('Eventr using compatibility layer...');
+						const arr = []
+						for (const [key, val] of Object.entries(json)) {
+							arr.push({
+								title: key,
+								type: val.type,
+								req: val.req,
+								options: val.options
+							})
+						}
+						console.log(arr);
+						eventrFormUpdate(wpTarget, arr)
+						return arr
+					}
+					return json
+				}
 				function eventrFormRender($, json, cont, wpTarget) {
 					$(cont).empty()
 					if (json) {
-						for (const [key, value] of Object.entries(json)) {
-							if (key == null || value == null) continue
+						for (const [index, value] of json.entries()) {
+							if (value.title == null) continue
 							const template = $(`
-								<div style="display: flex;border-bottom: 1px solid gray">
-									${key}
-									<span style="color:gray;flex:1;text-align:center">
+								<div style="
+									display: flex;
+									border-bottom: 1px solid gray;
+									padding: 10px 0;
+								">
+									<span style="
+										width: 30%;
+										max-height: 50px;
+										overflow-y: auto;
+									"/>
+									${value.title}
+									</span>
+									<span style="
+										color:gray;
+										flex:1;
+										max-height: 50px;
+										overflow-y: auto;
+										text-align:center;
+									">
 										(${value.type})
 										${value.req ? '<span style="color:red">*</span>' : ''}
 										${eventrProduceList(value.options)}
 									</span>
 								</div>
 							`)
+							const move = $(`
+								<div style="
+									display: flex;
+									flex-direction: column;
+									margin: auto 0;
+								"></div>
+							`)
+							const moveUp = $(`
+								<input 
+									value="˄"
+									type="button"
+									style="
+										height: 15px;
+										font-size: 12px;
+									"
+								/>
+							`)
+							const moveDown = $(`
+								<input 
+									value="˅"
+									type="button"
+									style="
+										height: 15px;
+										font-size: 12px;
+									"
+								/>
+							`)
 							const remove = $(`
-								<input type="button" value="Delete" style="width:60px;color:red"/>
+								<input type="button" value="Delete" style="
+									width:60px;
+									height:22px;
+									margin: auto 0;
+									color:red
+								"/>
 							`)
 							remove.click(() => {
-								delete json[key]
+								json.splice(index, 1)
 								template.remove()
 								eventrFormUpdate(wpTarget, json)
 							})
+							moveUp.click(() => {
+								if (index > 0) {
+									const item = json[index]
+									json[index] = json[index - 1]
+									json[index - 1] = item
+									eventrFormRender($, json, cont, wpTarget)
+									eventrFormUpdate(wpTarget, json)
+								}
+							})
+							moveDown.click(() => {
+								if (index < json.length - 1) {
+									const item = json[index]
+									json[index] = json[index + 1]
+									json[index + 1] = item
+									eventrFormRender($, json, cont, wpTarget)
+									eventrFormUpdate(wpTarget, json)
+								}
+							})
+							$(move).append(moveUp)
+							$(move).append(moveDown)
+							$(template).append(move)
 							$(template).append(remove)
 							$(cont).append(template)
 						}
@@ -404,7 +494,8 @@ class Eventr_Widget extends WP_Widget {
 				jQuery(document).ready(function ($) {
 					const selector = '<?php echo esc_attr($this->get_field_id( 'form' )); ?>'
 					const wpTarget = $(`#${selector}`)
-					const json = JSON.parse($(`#${selector}`)[0].value)
+					const json = eventrListify(JSON.parse($(`#${selector}`)[0].value), wpTarget)
+					console.log(json);
 					const parent = $(`.${selector}`)[0]
 					const cont = parent.children[0]
 					// Adding fields
@@ -437,11 +528,12 @@ class Eventr_Widget extends WP_Widget {
 					$(add).click(() => {
 						if (!title.value.trim().length)
 							return alert('Title is missing')
-						json[title.value] = {
+						json.push({
+							title: title.value,
 							type: type.value,
 							req: check.checked,
 							options
-						}
+						})
 						eventrFormRender($, json, cont, wpTarget)
 						eventrFormUpdate(wpTarget, json)
 						title.value = ''
