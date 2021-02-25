@@ -29,6 +29,9 @@ class Eventr_Widget extends WP_Widget {
 		$mail = get_option('eventr_mail_lang');
 		$target = get_option('eventr_email_target');
 		$submission = get_option('eventr_submission_lang');
+		$confirm = get_option('eventr_email_confirm');
+		$enrollConfirm = get_option('eventr_submission_confirm_lang');
+		$enrollConfirmComment = get_option('eventr_submission_confirm_comment_lang');
 
 		$icons = new EventrIcons();
 
@@ -57,14 +60,20 @@ class Eventr_Widget extends WP_Widget {
 			">
 				<div class="eventr-title" style="
 					color: <?php echo $instance['fg']; ?>;
-				"><?php echo $instance['title'] ?></div>
+				"><?php echo ((strlen($instance['title']) > 50) 
+					? esc_attr(substr($instance['title'],0,48)).'...' 
+					: esc_attr($instance['title'])); 
+				?></div>
 				<form>
 					<script>
 						if (!window.eventr) window.eventr = { }
 						window.eventr.text = {
 							mail: '<?php echo $mail == null ? 'New person applied to' : $mail ?>',
 							target: btoa('<?php echo $target == null ? 'BAD' : $target ?>'),
-							submission: '<?php echo $submission == null ? 'Submission sent' : $submission ?>'
+							submission: '<?php echo $submission == null ? 'Submission sent' : $submission ?>',
+							confirm: <?php echo $confirm == null ? '0' : $confirm ?>,
+							enrollConfirm: '<?php echo $enrollConfirm == null ? 'Congratulations! You have successfully enrolled to' : $enrollConfirm ?>',
+							enrollConfirmComment: '<?php echo $enrollConfirmComment == null ? '' : $enrollConfirmComment ?>'
 						}
 						window.eventr.icons = {
 							okay: `<?php echo $icons->okay('white'); ?>`.trim()
@@ -135,16 +144,18 @@ class Eventr_Widget extends WP_Widget {
 					?>
 
 				</form>
-				<!-- Enroll -->
-				<div class="eventr-submit eventr-btn" style="
-					border-color: <?php echo $instance['fg']; ?>;
-					color: <?php echo $instance['fg']; ?>;
-				">
-					<?php echo $enroll == null ? 'Enroll' : $enroll ?>
-				</div>
-				<!-- Back -->
-				<div class="eventr-exit eventr-btn">
-					<?php echo $back == null ? 'Back' : $back ?>
+				<div class="back-btn-cont">
+					<!-- Enroll -->
+					<div class="eventr-submit eventr-btn" style="
+						border-color: <?php echo $instance['fg']; ?>;
+						color: <?php echo $instance['fg']; ?>;
+					">
+						<?php echo $enroll == null ? 'Enroll' : $enroll ?>
+					</div>
+					<!-- Back -->
+					<div class="eventr-exit eventr-btn">
+						<?php echo $back == null ? 'Back' : $back ?>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -350,6 +361,7 @@ class Eventr_Widget extends WP_Widget {
 						<option value="checkbox">Checkbox</option>
 						<option value="select">Select</option>
 						<option value="paragraph">Paragraph</option>
+						<option value="email">Email</option>
 					</select>
 					<label>Required: </label>
 					<input type="checkbox"/>
@@ -438,6 +450,7 @@ class Eventr_Widget extends WP_Widget {
 									style="
 										height: 15px;
 										font-size: 12px;
+										padding: 0 3px;
 									"
 								/>
 							`)
@@ -448,6 +461,7 @@ class Eventr_Widget extends WP_Widget {
 									style="
 										height: 15px;
 										font-size: 12px;
+										padding: 0 3px;
 									"
 								/>
 							`)
@@ -455,6 +469,7 @@ class Eventr_Widget extends WP_Widget {
 								<input type="button" value="Delete" style="
 									width:60px;
 									height:22px;
+									font-size: 10px;
 									margin: auto 0;
 									color:red
 								"/>

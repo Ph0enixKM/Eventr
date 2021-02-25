@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     }
     for (const item of exits) {
-        const front = item.parentNode
+        const front = item.parentNode.parentNode
         const back = front.previousElementSibling
         item.addEventListener('click', () => {
             front.classList.remove('flip')
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     for (const item of submits) {
         item.addEventListener('click', async function _ () {
-            const form = item.previousElementSibling
+            const form = item.parentNode.previousElementSibling
             const data = new FormData();
             for (const el of form.children) {
                 if (el.classList.contains('eventr-input')) {
@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     // Input case
                     else {
+                        if (el.type == 'email') {
+                            window.eventr.text.emailConfirm = el.value
+                        }
                         data.append(name, el.value)
                     }
                     if (el.classList.contains('eventr-req'))
@@ -66,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const [key, value] of Object.entries(window.eventr.text)) {
                 data.append(`_${key}`, value)
             }
-            console.info('Eventr: sending...\n', console.log(Object.fromEntries(data)))
+            console.info(data);
             try {
                 item.style.opacity = '0.5'
                 item.removeEventListener('click', _)

@@ -41,6 +41,20 @@ class Eventr_Mailer {
             return 'text/html';
         });
         $done = wp_mail($target, $subject, $html);
+        // Send confirmation email
+        if ((int)$_POST['_confirm']) {
+            $assignee = $_POST['_emailConfirm'];
+            if (strlen($assignee) > 0) {
+                $enrollConfirm = $_POST['_enrollConfirm'];
+                $enrollComment = $_POST['_enrollConfirmComment'];
+                $html = preg_replace("/(.*!)/i", "<h2>$1</h2>", $enrollConfirm).':';
+                $html.= " $_title <br><br> $enrollComment";
+                add_filter('wp_mail_content_type', function() {
+                    return 'text/html';
+                });
+                wp_mail($assignee, "$enrollConfirm $_title", $html);
+            }
+        }
         if ($done) return 'OK';
         return 'Mailer is unable to send email';
     }

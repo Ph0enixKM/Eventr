@@ -35,6 +35,11 @@
     font-size: 1em !important;
 }
 
+.back-btn-cont {
+    width: 100%;
+    height: 100px;
+}
+
 .eventr-btn:hover {
     transform: scale(0.95);
 }
@@ -67,6 +72,8 @@
     padding: 20px;
     visibility: hidden;
     box-shadow: 0 0 0 #888;
+    display: flex;
+    flex-direction: column;
 }
 
 .eventr-front.flip {
