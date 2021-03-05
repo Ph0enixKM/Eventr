@@ -50,6 +50,8 @@
     font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     border-radius: 10px;
     padding-bottom: 10px;
+    font-weight: 300;
+    text-align: left;
 }
 
 .eventr-front {
