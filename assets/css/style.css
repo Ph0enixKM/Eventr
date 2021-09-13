@@ -1,3 +1,7 @@
+.eventr-hide {
+    display: none;
+}
+
 .eventr-title {
     padding: 10px;
     text-align: center;

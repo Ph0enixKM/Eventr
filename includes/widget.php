@@ -37,7 +37,7 @@ class Eventr_Widget extends WP_Widget {
 
 		?>
 
-		<div class="eventr-cont">
+		<div class="eventr-cont <?php echo $instance['hide'] ? 'eventr-hide' : ''; ?>">
 			<div class="eventr-front" style="
 				background-color: <?php echo $instance['bg']; ?>;
 				color: <?php echo $instance['fg']; ?>;
@@ -179,6 +179,7 @@ class Eventr_Widget extends WP_Widget {
 		$bg = ! empty( $instance['bg'] ) ? $instance['bg'] : '#dddddd';
 		$date = ! empty( $instance['date'] ) ? $instance['date'] : '';
 		$form = ! empty( $instance['form'] ) ? $instance['form'] : '{}';
+		$hide = ! empty( $instance['hide'] ) ? $instance['hide'] : 0;
 
 		?>
 
@@ -195,6 +196,18 @@ class Eventr_Widget extends WP_Widget {
                 type="text"
 				placeholder="Title"
                 value="<?php echo esc_attr( $title ); ?>"
+            />
+		</p>
+		<p>
+            <label for="<?php echo esc_attr( $this->get_field_id( 'hide' ) ); ?>">
+                <?php esc_attr_e( 'Hide:', 'eventr_domain' ); ?>
+            </label>
+            <input
+                class="widefat"
+                id="<?php echo esc_attr( $this->get_field_id( 'hide' ) ); ?>"
+                name="<?php echo esc_attr( $this->get_field_name( 'hide' ) ); ?>"
+                type="checkbox"
+                <?php checked( $hide, 'on' ); ?>
             />
 		</p>
 		<p>
@@ -580,6 +593,7 @@ class Eventr_Widget extends WP_Widget {
 		$instance['bg'] = ( ! empty( $new_instance['bg'] ) ) ? sanitize_text_field( $new_instance['bg'] ) : '';
 		$instance['date'] = ( ! empty( $new_instance['date'] ) ) ? sanitize_text_field( $new_instance['date'] ) : '';
 		$instance['form'] = ( ! empty( $new_instance['form'] ) ) ? sanitize_text_field( $new_instance['form'] ) : '';
+		$instance['hide'] = ( ! empty( $new_instance['hide'] ) ) ? sanitize_text_field( $new_instance['hide'] ) : 0;
 
 		return $instance;
 	}
